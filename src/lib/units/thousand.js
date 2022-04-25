@@ -27,5 +27,4 @@ addParseToken('t', function (input, array) {
     array[YEAR] = baseDate.get('year');
     array[MONTH] = baseDate.get('month');
     array[DATE] = baseDate.get('date');
-    console.log('Parsed t: ', baseDate);
 });
