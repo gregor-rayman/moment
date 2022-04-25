@@ -6,7 +6,7 @@
 
 import { hooks as moment, setHookCallback } from './lib/utils/hooks';
 
-moment.version = '2.29.2';
+moment.version = '2.29.2-CLOUDFARMS';
 
 import {
     min,

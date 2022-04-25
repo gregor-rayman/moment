@@ -14,6 +14,7 @@ import './timezone';
 import './week-year';
 import './week';
 import './year';
+import './thousand';
 
 import { normalizeUnits } from './aliases';
 
