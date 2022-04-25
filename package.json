@@ -93,6 +93,9 @@
             "uglify": true
         }
     },
+    "publishConfig": {
+        "registry": "https://repository.cloudfarms.online/repository/nuget-hosted/"
+    },
     "scripts": {
         "ts3.1-typescript-test": "cross-env node_modules/typescript3/bin/tsc --project ts3.1-typing-tests",
         "typescript-test": "cross-env node_modules/typescript/bin/tsc --project typing-tests",
