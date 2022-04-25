@@ -17,7 +17,7 @@ addFormatToken('t', 0, 0, function() {
 
 // PARSING
 
-addRegexToken('t', /((\d\d-?\d\d\d)|(\d\d\d))/, true)
+addRegexToken('t', /((\d\d-?\d\d\d)|(\d\d\d))/)
 
 addParseToken('t', function (input, array) {
     const dp = input.match(/^((\d\d+-?\d\d\d)|(\d\d\d))$/),
@@ -27,4 +27,5 @@ addParseToken('t', function (input, array) {
     array[YEAR] = baseDate.get('year');
     array[MONTH] = baseDate.get('month');
     array[DATE] = baseDate.get('date');
+    console.log('Parsed t: ', baseDate);
 });
