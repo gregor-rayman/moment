@@ -34195,7 +34195,7 @@
 
     // Concrete test for Locale#weekdaysMin
     test('Weekdays sort by locale', function (assert) {
-        const weekdays = 'domingo_lunes_martes_miércoles_jueves_viernes_sábado',
+        var weekdays = 'domingo_lunes_martes_miércoles_jueves_viernes_sábado',
             weekdaysShort = 'dom._lun._mar._mié._jue._vie._sáb.',
             weekdaysMin = 'do_lu_ma_mi_ju_vi_sá';
 
@@ -141707,6 +141707,143 @@
         assert.equal(b.format('MMMM Do YYYY, h:mm a'), 'August 28th 2011, 3:25 pm');
 
         String.prototype.call = prior;
+    });
+
+})));
+
+
+
+;(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined'
+       && typeof require === 'function' ? factory(require('../../moment')) :
+   typeof define === 'function' && define.amd ? define(['../../moment'], factory) :
+   factory(global.moment)
+}(this, (function (moment) { 'use strict';
+
+    function each(array, callback) {
+        var i;
+        for (i = 0; i < array.length; i++) {
+            callback(array[i], i, array);
+        }
+    }
+
+    function setupDeprecationHandler(test, moment, scope) {
+        test._expectedDeprecations = null;
+        test._observedDeprecations = null;
+        test._oldSupress = moment.suppressDeprecationWarnings;
+        moment.suppressDeprecationWarnings = true;
+        test.expectedDeprecations = function () {
+            test._expectedDeprecations = arguments;
+            test._observedDeprecations = [];
+        };
+        moment.deprecationHandler = function (name, msg) {
+            var deprecationId = matchedDeprecation(
+                name,
+                msg,
+                test._expectedDeprecations
+            );
+            if (deprecationId === -1) {
+                throw new Error(
+                    'Unexpected deprecation thrown name=' + name + ' msg=' + msg
+                );
+            }
+            test._observedDeprecations[deprecationId] = 1;
+        };
+    }
+
+    function teardownDeprecationHandler(test, moment, scope) {
+        moment.suppressDeprecationWarnings = test._oldSupress;
+
+        if (test._expectedDeprecations != null) {
+            var missedDeprecations = [];
+            each(test._expectedDeprecations, function (deprecationPattern, id) {
+                if (test._observedDeprecations[id] !== 1) {
+                    missedDeprecations.push(deprecationPattern);
+                }
+            });
+            if (missedDeprecations.length !== 0) {
+                throw new Error(
+                    'Expected deprecation warnings did not happen: ' +
+                        missedDeprecations.join(' ')
+                );
+            }
+        }
+    }
+
+    function matchedDeprecation(name, msg, deprecations) {
+        if (deprecations == null) {
+            return -1;
+        }
+        for (var i = 0; i < deprecations.length; ++i) {
+            if (name != null && name === deprecations[i]) {
+                return i;
+            }
+            if (
+                msg != null &&
+                msg.substring(0, deprecations[i].length) === deprecations[i]
+            ) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /*global QUnit:false*/
+
+    var test = QUnit.test,
+        only = QUnit.only;
+
+    function module(name, lifecycle) {
+        QUnit.module(name, {
+            beforeEach: function () {
+                moment.locale('en');
+                moment.createFromInputFallback = function (config) {
+                    throw new Error('input not handled by moment: ' + config._i);
+                };
+                setupDeprecationHandler(test, moment);
+                if (lifecycle && lifecycle.setup) {
+                    lifecycle.setup();
+                }
+            },
+            afterEach: function () {
+                teardownDeprecationHandler(test, moment);
+                if (lifecycle && lifecycle.teardown) {
+                    lifecycle.teardown();
+                }
+            },
+        });
+    }
+
+    module('thousand');
+
+    test('thousand', function(assert) {
+        assert.equal(
+            moment([1971, 8, 29]).format('t'), '00-002'
+        );
+        assert.equal(
+            moment([1971, 8, 29, 17, 38, 56]).format('t HH:mm:ss'), '00-002 17:38:56'
+        );
+        assert.equal(
+            moment('17-456', 't').format('t'), '17-456'
+        );
+        assert.equal(
+            moment('17456', 't').format('t'), '17-456'
+        );
+
+        assert.equal(
+            moment('17456 14:34:56', 't HH:mm:ss').format('t HH:mm:ss'), '17-456 14:34:56'
+        );
+        assert.equal(
+            moment('17456 14:34:56', 't HH:mm:ss', true).format('t HH:mm:ss'), '17-456 14:34:56'
+        );
+        const today = moment(),
+              todayT = today.format('t'),
+              result = todayT.replace(/\d+$/,'') + '300';
+
+        assert.equal(
+            moment('300', 't').format('t'), result
+        );
+
     });
 
 })));
