@@ -1,6 +1,6 @@
 {
     "name": "moment",
-    "version": "2.29.2-CLOUDFARMS",
+    "version": "2.29.3-CLOUDFARMS",
     "description": "Parse, validate, manipulate, and display dates",
     "homepage": "https://momentjs.com",
     "author": "Iskren Ivov Chernev <iskren.chernev@gmail.com> (https://github.com/ichernev)",
@@ -94,7 +94,7 @@
         }
     },
     "publishConfig": {
-        "registry": "https://repository.cloudfarms.online/repository/nuget-hosted/"
+        "registry": "https://repository.cloudfarms.online/repository/npm/"
     },
     "scripts": {
         "ts3.1-typescript-test": "cross-env node_modules/typescript3/bin/tsc --project ts3.1-typing-tests",

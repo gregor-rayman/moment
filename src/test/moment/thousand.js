@@ -24,11 +24,15 @@ test('thousand', function(assert) {
         moment('17456 14:34:56', 't HH:mm:ss', true).format('t HH:mm:ss'), '17-456 14:34:56'
     )
     const today = moment(),
-          todayT = today.format('t'),
-          result = todayT.replace(/\d+$/,'') + '300';
-
-    assert.equal(
-        moment('300', 't').format('t'), result
-    )
+        todayT = today.format('t'),
+        todayD = parseInt(todayT.replace(/^\d+-/,'')),
+        result150 = (parseInt(todayT.replace(/-\d+$/,'')) + (todayD > 800 ? 1 : 0))  + '-150',
+        result900 = (parseInt(todayT.replace(/-\d+$/,'')) + (todayD <= 200 ? -1 : 0)) + '-900';
+    // console.log(todayT);
+    // console.log(todayD);
+    // console.log(result150);
+    // console.log(result900);
+    assert.equal(moment('150', 't').format('t'), result150);
+    assert.equal(moment('900', 't').format('t'), result900);
 
 });

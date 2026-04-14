@@ -4,6 +4,10 @@
 //! license : MIT
 //! momentjs.com
 
+import {addParseToken} from "./src/lib/parse/token";
+import {hooks} from "./src/lib/utils/hooks";
+import {DATE, MONTH, YEAR} from "./src/lib/units/constants";
+
 ;(function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
@@ -5648,17 +5652,23 @@
 
     addParseToken('t', function (input, array) {
         const dp = input.match(/^((\d\d+-?\d\d\d)|(\d\d\d))$/),
-              baseDate = dp[2] ? hooks(start1000days).add(parseInt(dp[2].replace('-', '')), 'days') :
-                hooks(start1000days).clone().add(Math.floor(hooks().startOf('day').diff(start1000days, 'days') / 1000) * 1000 + parseInt(dp[3]), 'days');
+            todayDays = hooks().startOf('day').diff(start1000days, 'days'),
+            todayM = Math.floor(todayDays / 1000),
+            todayD = todayDays % 1000,
+            str5 = dp[2],
+            str3 = dp[3],
+            days3 = parseInt(str3),
+            baseM = (todayD > 800) && (days3 <= 200) ? todayM + 1 : (todayD <= 200) && (days3 > 800) ? todayM - 1 : todayM,
+            baseDate = str5 ? hooks(start1000days).add(parseInt(str5.replace('-', '')), 'days') :
+                hooks(start1000days).clone().add(baseM * 1000 + parseInt(days3), 'days')
 
         array[YEAR] = baseDate.get('year');
         array[MONTH] = baseDate.get('month');
         array[DATE] = baseDate.get('date');
     });
-
     //! moment.js
 
-    hooks.version = '2.29.2-CLOUDFARMS';
+    hooks.version = '2.29.3-CLOUDFARMS';
 
     setHookCallback(createLocal);
 
