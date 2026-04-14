@@ -3,11 +3,6 @@
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
-
-import {addParseToken} from "./src/lib/parse/token";
-import {hooks} from "./src/lib/utils/hooks";
-import {DATE, MONTH, YEAR} from "./src/lib/units/constants";
-
 ;(function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
